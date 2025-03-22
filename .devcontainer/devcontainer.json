@@ -1,13 +1,13 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
-	"name": "Debian",
+	"name": "devkitPPC",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"image": "devkitpro/devkitppc:latest",
 	"features": {
 	},
 
-	"postCreateCommand": "wget https://apt.devkitpro.org/install-devkitpro-pacman && chmod +x install-devkitpro-pacman && yes | sudo ./install-devkitpro-pacman && sudo dkp-pacman -Sy && sudo dkp-pacman -S --needed --noconfirm gamecube-dev wii-dev libfat-ogc ppc-libpng ppc-freetype ppc-libjpeg-turbo && rm install-devkitpro-pacman && . /etc/profile.d/devkit-env.sh && cd deps/GRRLIB && make -C GRRLIB clean all && sudo -E make -C GRRLIB install",
+	"postCreateCommand": "cd deps/GRRLIB && make -C GRRLIB clean all && sudo -E make -C GRRLIB install",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -16,7 +16,13 @@
 	// "forwardPorts": [],
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools"
+            ]
+        }
+    }
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
