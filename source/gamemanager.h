@@ -1,0 +1,30 @@
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
+
+#include <grrlib.h>
+
+
+enum screens
+{
+    SCREEN_EXIT = -1,
+    SCREEN_SPLASH = 0,
+    SCREEN_CREDITS,
+};
+
+typedef struct GameModeExit
+{
+    int screen;
+} GameModeExit;
+
+typedef struct GameState
+{
+    GRRLIB_ttfFont* basicFont;
+    int frameCount;
+    char message[80*40];
+} GameState;
+
+extern GameModeExit error_screen(GameState* state);
+extern GameModeExit splash_screen(GameState* state);
+// extern GameModeExit credits_screen();
+
+#endif
