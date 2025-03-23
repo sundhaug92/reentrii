@@ -7,7 +7,7 @@
 	"features": {
 	},
 
-	"postCreateCommand": "cd deps/GRRLIB && make -C GRRLIB clean all && sudo -E make -C GRRLIB install",
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y libbluetooth-dev libc6-dev-powerpc-cross && cd deps/GRRLIB && make -C GRRLIB clean all && sudo -E make -C GRRLIB install",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -19,8 +19,9 @@
 	"customizations": {
         "vscode": {
             "extensions": [
-                "ms-vscode.cpptools"
-            ]
+				"ms-vscode.cpptools",
+				"ms-vscode.cpptools-extension-pack"
+			]
         }
     }
 
