@@ -26,12 +26,14 @@ int main(int argc, char **argv) {
                 currentMode = splash_screen(&state);
                 break;
             case SCREEN_CREDITS:
-                // currentScreen = credits_screen();
+                currentMode = credits_screen(&state);
                 break;
             default:
                 snprintf(state.message, sizeof(state.message), "Unknown screen %d", currentMode.screen);
+            case SCREEN_ERROR:
                 currentMode = error_screen(&state);
-        }
+                break;
+            }
     }
 
     GRRLIB_Exit();

@@ -6,6 +6,7 @@
 
 enum screens
 {
+    SCREEN_ERROR = -2,
     SCREEN_EXIT = -1,
     SCREEN_SPLASH = 0,
     SCREEN_CREDITS,
@@ -25,6 +26,6 @@ typedef struct GameState
 
 extern GameModeExit error_screen(GameState* state);
 extern GameModeExit splash_screen(GameState* state);
-// extern GameModeExit credits_screen();
+extern GameModeExit credits_screen();
 
 #endif
