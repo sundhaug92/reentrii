@@ -33,7 +33,11 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lwiiuse -lbte -logc -lm -lgrrlib -lpngu `powerpc-eabi-pkg-config freetype2 libpng libjpeg --libs` -lfat
+LIBS	:= -lgrrlib -lpngu
+LIBS	+= `$(PREFIX)pkg-config freetype2 libpng libjpeg --libs` -lfat
+LIBS	+= -lwiiuse
+LIBS	+= -lbte -logc -lm
+
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -136,3 +140,9 @@ $(OFILES_SOURCES) : $(HFILES)
 #---------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------
+
+# Copied from GRRLIB's Makefile
+%.ttf.o	:	%.ttf
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	$(bin2o)

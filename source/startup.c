@@ -1,38 +1,46 @@
-#include <stdio.h>
+#include <grrlib.h>
+ 
 #include <stdlib.h>
-#include <gccore.h>
+#include <stdio.h>
 #include <wiiuse/wpad.h>
+#include <ogc/lwp_watchdog.h>
 
-static void *xfb = NULL;
-static GXRModeObj *rmode = NULL;
+#include "FreeMonoBold_ttf.h"
 
 int main(int argc, char **argv) {
-    VIDEO_Init();
+    GRRLIB_Init();
     WPAD_Init();
 
-    rmode = VIDEO_GetPreferredMode(NULL);
+    GRRLIB_ttfFont *myFont = GRRLIB_LoadTTF(FreeMonoBold_ttf, FreeMonoBold_ttf_size);
+    GRRLIB_texImg *CopiedImg = GRRLIB_CreateEmptyTexture(rmode->fbWidth, rmode->efbHeight);
+    GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
-    xfb = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
-    console_init(xfb, 20, 20, rmode->fbWidth, rmode->efbHeight, rmode->fbWidth * VI_DISPLAY_PIX_SZ);
+    srand(time(NULL));
 
-    VIDEO_Configure(rmode);
-    VIDEO_SetNextFramebuffer(xfb);
-    VIDEO_SetBlack(FALSE);
-    VIDEO_Flush();
-    VIDEO_WaitVSync();
-    if(rmode->viTVMode&VI_NON_INTERLACE) VIDEO_WaitVSync();
-
-    printf("\x1b[2;0HHello, world!\n");
-
+    int frameCount = 0;
     while(true) {
+        GRRLIB_DrawImg(0, 0, CopiedImg, 0, 1, 1, 0xFFFFFFFF);
+        GRRLIB_PrintfTTF(100, 100, myFont, "Reentrii", 32, 0xFFFFFFFF);
+        // GRRLIB_Screen2Texture(0,0, CopiedImg, false);
+
+        for (int x = 0; x < rmode->fbWidth; x++) {
+                for (int y = 0; y < rmode->efbHeight; y++) {
+                    GRRLIB_SetPixelTotexImg(x, y, CopiedImg, (rand() % 0xFFFFFF) << 8 | 0xFF);
+                }
+            }
+
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0);
         if(pressed & WPAD_BUTTON_HOME) {
             break;
         }
 
-        VIDEO_WaitVSync();
+        GRRLIB_Render();
+
+        frameCount++;
     }
 
-    return 0;
+    GRRLIB_Exit();
+    WPAD_Shutdown();
+    exit(0);
 }
