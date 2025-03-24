@@ -10,6 +10,7 @@ enum screens
     SCREEN_EXIT = -1,
     SCREEN_SPLASH = 0,
     SCREEN_CREDITS,
+    SCREEN_GAME
 };
 
 typedef struct GameModeExit

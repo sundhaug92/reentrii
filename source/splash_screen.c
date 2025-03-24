@@ -5,11 +5,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define PROMPT_ALPHA_MIN 64
+#define PROMPT_ALPHA_MAX 255
+#define PROMPT_ALPHA_SPEED 1
+
 GameModeExit splash_screen(GameState* state) {
     GRRLIB_texImg *titleImg = GRRLIB_LoadTexture(title_png);
+
+    if(titleImg == NULL) {
+        strcpy((*state).message[0], "Failed to load title image");
+        return (GameModeExit) { .screen = SCREEN_ERROR };
+    }
+
+    // TODO: Consider using an actual texture for the prompt
+    GRRLIB_texImg *promptImg = GRRLIB_CreateEmptyTexture(640, 480);
+    GRRLIB_CompoStart();
+    GRRLIB_PrintfTTF(0, 0, (*state).basicFont, "Press 1 for game, press 2 for credits", 24, 0xFFFFFFFF);
+    GRRLIB_CompoEnd(0,0, promptImg);
+
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
     int main_alpha = 0;
+    int prompt_alpha = 0;
+    int prompt_alpha_delta = 0;
 
     int next_screen = SCREEN_EXIT;
 
@@ -36,8 +54,9 @@ GameModeExit splash_screen(GameState* state) {
             (cheat_counter == 10 && RIGHT_PRESSED) ||
             (cheat_counter == 12 && LEFT_PRESSED) ||
             (cheat_counter == 14 && RIGHT_PRESSED) ||
-            (cheat_counter == 16 && B_PRESSED) ||
-            (cheat_counter == 18 && A_PRESSED)
+            (cheat_counter == 16 && LEFT_PRESSED) ||
+            (cheat_counter == 18 && B_PRESSED) ||
+            (cheat_counter == 20 && A_PRESSED)
         ) {
             cheat_counter++;
         }
@@ -48,11 +67,15 @@ GameModeExit splash_screen(GameState* state) {
             cheat_counter = 0;
         }
 
-        if(cheat_counter == 18) {
+        if(cheat_counter == 20) {
             (*state).cheatsEnabled = true;
         }
 
         if(pressed & WPAD_BUTTON_HOME) {
+            break;
+        }
+        else if (pressed & WPAD_BUTTON_1) {
+            next_screen = SCREEN_GAME;
             break;
         }
         else if (pressed & WPAD_BUTTON_2) {
@@ -63,8 +86,20 @@ GameModeExit splash_screen(GameState* state) {
         if(main_alpha < 255) {
             main_alpha++;
         }
+        else if(prompt_alpha_delta == 0) {
+            prompt_alpha_delta = PROMPT_ALPHA_SPEED;
+            prompt_alpha = PROMPT_ALPHA_MAX;
+        }
+
+        // printf("main_alpha: %d, prompt_alpha: %d, prompt_alpha_delta: %d\n", main_alpha, prompt_alpha, prompt_alpha_delta);
+        prompt_alpha += prompt_alpha_delta;
+        if ((prompt_alpha <= PROMPT_ALPHA_MIN && prompt_alpha_delta < 0) || (prompt_alpha >= PROMPT_ALPHA_MAX && prompt_alpha_delta > 0))
+        {
+            prompt_alpha_delta *= -1;
+        }
 
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | main_alpha);
+        GRRLIB_DrawImg(0, 480-24, promptImg, 0, 1, 1, (0xFFFFFF << 8) | prompt_alpha);
 
         if((*state).cheatsEnabled)
             GRRLIB_PrintfTTF(193, 200, (*state).basicFont, "CHEATS ENABLED", 32, 0xFFFF00FF);
@@ -80,5 +115,6 @@ GameModeExit splash_screen(GameState* state) {
     }
 
     GRRLIB_FreeTexture(titleImg);
+    GRRLIB_FreeTexture(promptImg);
     return (GameModeExit) { .screen = next_screen };
 }
