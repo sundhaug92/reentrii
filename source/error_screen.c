@@ -12,6 +12,7 @@ GameModeExit error_screen(GameState* state) {
         for (int line = 0; line < 40; line++)
         {
             GRRLIB_PrintfTTF(100, 100 + (line * 16), (*state).basicFont, (*state).message[line], 12, 0xFFFFFFFF);
+            printf("%s\n", (*state).message[line]);
         }
 
         WPAD_ScanPads();

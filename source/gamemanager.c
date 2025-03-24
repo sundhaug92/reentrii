@@ -27,10 +27,7 @@ int main(int argc, char **argv) {
 
     GameModeExit currentMode = (GameModeExit) { .screen = SCREEN_SPLASH };
 
-    // snprintf(state.message[0], sizeof(state.message[0]), "viTVMode=%d, fbWidth=%d, efbHeight=%d, xfbHeight=%d", rmode->viTVMode, rmode->fbWidth, rmode->efbHeight, rmode->xfbHeight);
-    // snprintf(state.message[1], sizeof(state.message[1]), "viXOrigin=%d, viYOrigin=%d, viWidth=%d, viHeight=%d", rmode->viXOrigin, rmode->viYOrigin, rmode->viWidth, rmode->viHeight);
-    // 
-    // currentMode.screen = SCREEN_ERROR;
+    SYS_STDIO_Report(true);
 
     while(currentMode.screen != SCREEN_EXIT) {
         switch(currentMode.screen) {
