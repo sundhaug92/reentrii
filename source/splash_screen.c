@@ -9,18 +9,18 @@
 #define PROMPT_ALPHA_MAX 255
 #define PROMPT_ALPHA_SPEED 1
 
-GameModeExit splash_screen(GameState* state) {
+GameModeExit splash_screen(GameState* global_state) {
     GRRLIB_texImg *titleImg = GRRLIB_LoadTexture(title_png);
 
     if(titleImg == NULL) {
-        strcpy((*state).message[0], "Failed to load title image");
+        strcpy((*global_state).message[0], "Failed to load title image");
         return (GameModeExit) { .screen = SCREEN_ERROR };
     }
 
     // TODO: Consider using an actual texture for the prompt
     GRRLIB_texImg *promptImg = GRRLIB_CreateEmptyTexture(640, 480);
     GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*state).basicFont, "Press 1 for game, press 2 for credits", 24, 0xFFFFFFFF);
+    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "Press 1 for game, press 2 for credits", 24, 0xFFFFFFFF);
     GRRLIB_CompoEnd(0,0, promptImg);
 
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
@@ -33,7 +33,7 @@ GameModeExit splash_screen(GameState* state) {
 
     int cheat_counter = 0;
 
-    while(true) {
+    while(!(*global_state).exitRequested) {
 
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0);
@@ -68,7 +68,7 @@ GameModeExit splash_screen(GameState* state) {
         }
 
         if(cheat_counter == 20) {
-            (*state).cheatsEnabled = true;
+            (*global_state).cheatsEnabled = true;
         }
 
         if(pressed & WPAD_BUTTON_HOME) {
@@ -101,16 +101,16 @@ GameModeExit splash_screen(GameState* state) {
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | main_alpha);
         GRRLIB_DrawImg(0, 480-24, promptImg, 0, 1, 1, (0xFFFFFF << 8) | prompt_alpha);
 
-        if((*state).cheatsEnabled)
-            GRRLIB_PrintfTTF(193, 200, (*state).basicFont, "CHEATS ENABLED", 32, 0xFFFF00FF);
+        if((*global_state).cheatsEnabled)
+            GRRLIB_PrintfTTF(193, 200, (*global_state).basicFont, "CHEATS ENABLED", 32, 0xFFFF00FF);
 
         GRRLIB_Render();
     }
 
     for(int fade = 255; fade > 0; fade-=4) {
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | fade);
-        if((*state).cheatsEnabled)
-            GRRLIB_PrintfTTF(193, 200, (*state).basicFont, "CHEATS ENABLED", 32, (0xFFFF00 << 8) | fade);
+        if((*global_state).cheatsEnabled)
+            GRRLIB_PrintfTTF(193, 200, (*global_state).basicFont, "CHEATS ENABLED", 32, (0xFFFF00 << 8) | fade);
         GRRLIB_Render();
     }
 

@@ -18,18 +18,17 @@ typedef struct GameModeExit
     int screen;
 } GameModeExit;
 
-
-// TODO: Make a extern struct
 typedef struct GameState
 {
     GRRLIB_ttfFont* basicFont;
     int frameCount;
     char message[40][80];
     bool cheatsEnabled;
+    bool exitRequested;
 } GameState;
 
-extern GameModeExit error_screen(GameState* state);
-extern GameModeExit splash_screen(GameState* state);
+extern GameModeExit error_screen(GameState* global_state);
+extern GameModeExit splash_screen(GameState* global_state);
 extern GameModeExit credits_screen();
 
 #endif

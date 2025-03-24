@@ -15,14 +15,14 @@ int main(int argc, char **argv) {
     WPAD_Init();
     srand(time(NULL));
 
-    GameState state = {
+    GameState global_state = {
         .basicFont = GRRLIB_LoadTTF(FreeMonoBold_ttf, FreeMonoBold_ttf_size),
         .frameCount = 0,
         .cheatsEnabled = false
     };
 
     for(int line=0; line<40; line++) {
-        memset(state.message[line], 0, sizeof(state.message[line]));
+        memset(global_state.message[line], 0, sizeof(global_state.message[line]));
     }
 
     GameModeExit currentMode = (GameModeExit) { .screen = SCREEN_SPLASH };
@@ -32,15 +32,15 @@ int main(int argc, char **argv) {
     while(currentMode.screen != SCREEN_EXIT) {
         switch(currentMode.screen) {
             case SCREEN_SPLASH:
-                currentMode = splash_screen(&state);
+                currentMode = splash_screen(&global_state);
                 break;
             case SCREEN_CREDITS:
-                currentMode = credits_screen(&state);
+                currentMode = credits_screen(&global_state);
                 break;
             default:
-                snprintf(state.message[0], sizeof(state.message[0]), "Unknown screen %d", currentMode.screen);
+                snprintf(global_state.message[0], sizeof(global_state.message[0]), "Unknown screen %d", currentMode.screen);
             case SCREEN_ERROR:
-                currentMode = error_screen(&state);
+                currentMode = error_screen(&global_state);
                 break;
             }
     }
