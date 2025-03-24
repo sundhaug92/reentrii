@@ -24,14 +24,14 @@ GameModeExit credits_screen(GameState* state) {
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
 
-    int y = 0;
+    int y = 480;
 
-    int fade = 255;
 
     while (true)
     {
-        GRRLIB_DrawImg(0, y / 2, creditsBg1, 0, 1, 1, RGBA(255, 255, 255, 255));
-        GRRLIB_DrawImg(0, y, credits1, 0, 1, 1, RGBA(255, 255, 255, fade));
+        int bg_y = y <= 0 ? y / 2 : 0;
+        GRRLIB_DrawImg(0, bg_y, creditsBg1, 0, 1, 1, RGBA(255, 255, 255, 255));
+        GRRLIB_DrawImg(0, y, credits1, 0, 1, 1, RGBA(255, 255, 255, 255));
 
         GRRLIB_SetBlend(0);
 
@@ -43,13 +43,13 @@ GameModeExit credits_screen(GameState* state) {
             break;
         }
 
-        if (y < -(credits1->h))
+        if (bg_y < -500)
         {
-            fade -= 1;
-            if (fade < 15)
-            {
-                break;
-            }
+            printf("\n\nCredits screen done\n");
+            printf("bg_y: %d\n", bg_y);
+            printf("creditsBg1->h: %d\n", creditsBg1->h);
+            printf("rmode->viHeight: %d\n", rmode->viHeight);
+            break;
         }
 
         GRRLIB_Render();
