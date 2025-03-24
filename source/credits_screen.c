@@ -12,12 +12,12 @@ GameModeExit credits_screen(GameState* state) {
     GRRLIB_texImg *credits1 = GRRLIB_LoadTexture(credits1_png);
 
     if(creditsBg1 == NULL) {
-        strcpy((*state).message, "Failed to load credits background 1");
+        strcpy((*state).message[0], "Failed to load credits background 1");
         return (GameModeExit) { .screen = SCREEN_ERROR };
     }
 
     if(credits1 == NULL) {
-        strcpy((*state).message, "Failed to load credits image 1");
+        strcpy((*state).message[0], "Failed to load credits image 1");
         return (GameModeExit) { .screen = SCREEN_ERROR };
     }
 

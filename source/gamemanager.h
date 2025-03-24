@@ -21,7 +21,8 @@ typedef struct GameState
 {
     GRRLIB_ttfFont* basicFont;
     int frameCount;
-    char message[80*40];
+    char message[40][80];
+    bool cheatsEnabled;
 } GameState;
 
 extern GameModeExit error_screen(GameState* state);
