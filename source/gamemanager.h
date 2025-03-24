@@ -18,6 +18,8 @@ typedef struct GameModeExit
     int screen;
 } GameModeExit;
 
+
+// TODO: Make a extern struct
 typedef struct GameState
 {
     GRRLIB_ttfFont* basicFont;
