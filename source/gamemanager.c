@@ -60,6 +60,8 @@ int main(int argc, char **argv)
             currentMode = error_screen(&global_state);
             break;
         }
+        
+        GX_WaitDrawDone();
     }
 
     GRRLIB_Exit();
