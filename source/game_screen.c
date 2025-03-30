@@ -157,7 +157,7 @@ GameModeExit game_screen(GameState* global_state) {
 
                     int dy = 0;
                     if (shots2Fire > 3)
-                        dy = (rand() % 16) - 8;
+                        dy = (rand() % 8) - 4;
                     else if(shots2Fire == 3)
                         dy = 8;
                     else if(shots2Fire == 2)
