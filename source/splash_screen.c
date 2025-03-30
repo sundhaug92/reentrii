@@ -9,20 +9,22 @@
 #define PROMPT_ALPHA_MAX 255
 #define PROMPT_ALPHA_SPEED 1
 
-GameModeExit splash_screen(GameState* global_state) {
+GameModeExit splash_screen(GameState *global_state)
+{
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
     GRRLIB_texImg *titleImg = GRRLIB_LoadTexture(title_png);
 
-    if(titleImg == NULL) {
+    if (titleImg == NULL)
+    {
         strcpy((*global_state).message[0], "Failed to load title image");
-        return (GameModeExit) { .screen = SCREEN_ERROR };
+        return (GameModeExit){.screen = SCREEN_ERROR};
     }
 
     // TODO: Consider using an actual texture for the prompt
     GRRLIB_texImg *promptImg = GRRLIB_CreateEmptyTexture(640, 32);
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "Press 1 for game, press 2 for credits", 24, 0xFFFFFFFF);
-    GRRLIB_CompoEnd(0,0, promptImg);
+    GRRLIB_CompoEnd(0, 0, promptImg);
 
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
@@ -34,7 +36,8 @@ GameModeExit splash_screen(GameState* global_state) {
 
     int cheat_counter = 0;
 
-    while(!(*global_state).exitRequested) {
+    while (!(*global_state).exitRequested)
+    {
 
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0);
@@ -56,42 +59,50 @@ GameModeExit splash_screen(GameState* global_state) {
             (cheat_counter == 12 && LEFT_PRESSED) ||
             (cheat_counter == 14 && RIGHT_PRESSED) ||
             (cheat_counter == 16 && B_PRESSED) ||
-            (cheat_counter == 18 && A_PRESSED)
-        ) {
+            (cheat_counter == 18 && A_PRESSED))
+        {
             cheat_counter++;
             printf("Cheat counter: %d\n", cheat_counter);
         }
-        else if(pressed == 0 && (cheat_counter & 1) == 1) {
+        else if (pressed == 0 && (cheat_counter & 1) == 1)
+        {
             cheat_counter++;
             printf("Cheat counter: %d\n", cheat_counter);
         }
-        else if(pressed > 0) {
+        else if (pressed > 0)
+        {
             printf("Cheat counter reset\n");
             cheat_counter = 0;
         }
 
-        if(cheat_counter == 20) {
+        if (cheat_counter == 20)
+        {
             printf("Enabling cheats\n");
             (*global_state).cheatsEnabled = true;
             cheat_counter = 0; // Prevent spamming the log
         }
 
-        if(pressed & WPAD_BUTTON_HOME) {
+        if (pressed & WPAD_BUTTON_HOME)
+        {
             break;
         }
-        else if (pressed & WPAD_BUTTON_1) {
+        else if (pressed & WPAD_BUTTON_1)
+        {
             next_screen = SCREEN_STORY;
             break;
         }
-        else if (pressed & WPAD_BUTTON_2) {
+        else if (pressed & WPAD_BUTTON_2)
+        {
             next_screen = SCREEN_CREDITS;
             break;
         }
 
-        if(main_alpha < 255) {
+        if (main_alpha < 255)
+        {
             main_alpha++;
         }
-        else if(prompt_alpha_delta == 0) {
+        else if (prompt_alpha_delta == 0)
+        {
             prompt_alpha_delta = PROMPT_ALPHA_SPEED;
             prompt_alpha = PROMPT_ALPHA_MAX;
         }
@@ -104,23 +115,24 @@ GameModeExit splash_screen(GameState* global_state) {
         }
 
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | main_alpha);
-        GRRLIB_DrawImg(0, 480-24, promptImg, 0, 1, 1, (0xFFFFFF << 8) | prompt_alpha);
+        GRRLIB_DrawImg(0, 480 - 24, promptImg, 0, 1, 1, (0xFFFFFF << 8) | prompt_alpha);
 
-        if((*global_state).cheatsEnabled)
+        if ((*global_state).cheatsEnabled)
             GRRLIB_PrintfTTF(193, 200, (*global_state).basicFont, "CHEATS ENABLED", 32, 0xFFFF00FF);
 
         GRRLIB_Render();
     }
 
-    for(int fade = 255; fade > 0; fade-=4) {
+    for (int fade = 255; fade > 0; fade -= 4)
+    {
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | fade);
-        if((*global_state).cheatsEnabled)
+        if ((*global_state).cheatsEnabled)
             GRRLIB_PrintfTTF(193, 200, (*global_state).basicFont, "CHEATS ENABLED", 32, (0xFFFF00 << 8) | fade);
         GRRLIB_Render();
     }
 
     GRRLIB_FreeTexture(titleImg);
     GRRLIB_FreeTexture(promptImg);
-    
-    return (GameModeExit) { .screen = next_screen };
+
+    return (GameModeExit){.screen = next_screen};
 }

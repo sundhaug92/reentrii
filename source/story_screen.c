@@ -19,10 +19,10 @@ char story[][80] = {
     "return the retro-pack to the elders",
     "before it's too late.",
     "",
-    "Good luck, commander."
-};
+    "Good luck, commander."};
 
-GameModeExit story_screen(GameState* global_state) {
+GameModeExit story_screen(GameState *global_state)
+{
     GRRLIB_texImg *storyBg = GRRLIB_LoadTexture(credits_bg1_png);
     GRRLIB_texImg *storyTex = GRRLIB_CreateEmptyTexture(640, 32 * sizeof(story) / sizeof(story[0]));
 
@@ -33,22 +33,23 @@ GameModeExit story_screen(GameState* global_state) {
     }
     GRRLIB_CompoEnd(0, 0, storyTex);
 
-    if(storyBg == NULL) {
+    if (storyBg == NULL)
+    {
         strcpy((*global_state).message[0], "Failed to load story background 1");
-        return (GameModeExit) { .screen = SCREEN_ERROR };
+        return (GameModeExit){.screen = SCREEN_ERROR};
     }
 
-    if(storyTex == NULL) {
+    if (storyTex == NULL)
+    {
         strcpy((*global_state).message[0], "Failed to load story image 1");
-        return (GameModeExit) { .screen = SCREEN_ERROR };
+        return (GameModeExit){.screen = SCREEN_ERROR};
     }
 
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
-
     int y = 480;
 
-    GameModeExit next_screen = { .screen = SCREEN_GAME };
+    GameModeExit next_screen = {.screen = SCREEN_GAME};
 
     for (int frame = 0; frame < 60 * 20; frame++)
     {
@@ -62,7 +63,8 @@ GameModeExit story_screen(GameState* global_state) {
 
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0);
-        if(pressed & WPAD_BUTTON_1 || pressed & WPAD_BUTTON_2 || pressed & WPAD_BUTTON_A || pressed & WPAD_BUTTON_B) {
+        if (pressed & WPAD_BUTTON_1 || pressed & WPAD_BUTTON_2 || pressed & WPAD_BUTTON_A || pressed & WPAD_BUTTON_B)
+        {
             break;
         }
 

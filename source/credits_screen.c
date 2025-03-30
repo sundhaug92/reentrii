@@ -7,25 +7,26 @@
 #include "credits1_png.h"
 #include "credits_bg1_png.h"
 
-GameModeExit credits_screen(GameState* global_state) {
+GameModeExit credits_screen(GameState *global_state)
+{
     GRRLIB_texImg *creditsBg1 = GRRLIB_LoadTexture(credits_bg1_png);
     GRRLIB_texImg *credits1 = GRRLIB_LoadTexture(credits1_png);
 
-    if(creditsBg1 == NULL) {
+    if (creditsBg1 == NULL)
+    {
         strcpy((*global_state).message[0], "Failed to load credits background 1");
-        return (GameModeExit) { .screen = SCREEN_ERROR };
+        return (GameModeExit){.screen = SCREEN_ERROR};
     }
 
-    if(credits1 == NULL) {
+    if (credits1 == NULL)
+    {
         strcpy((*global_state).message[0], "Failed to load credits image 1");
-        return (GameModeExit) { .screen = SCREEN_ERROR };
+        return (GameModeExit){.screen = SCREEN_ERROR};
     }
 
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
-
     int y = 480;
-
 
     while (true)
     {
@@ -39,7 +40,8 @@ GameModeExit credits_screen(GameState* global_state) {
 
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0);
-        if(pressed & WPAD_BUTTON_HOME) {
+        if (pressed & WPAD_BUTTON_HOME)
+        {
             break;
         }
 
@@ -56,5 +58,5 @@ GameModeExit credits_screen(GameState* global_state) {
     }
     GRRLIB_FreeTexture(creditsBg1);
     GRRLIB_FreeTexture(credits1);
-    return (GameModeExit) { .screen = SCREEN_SPLASH };
+    return (GameModeExit){.screen = SCREEN_SPLASH};
 }
