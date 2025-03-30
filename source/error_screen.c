@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 GameModeExit error_screen(GameState* global_state) {
-    GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
+    GRRLIB_SetBackgroundColour(0x00, 0x00, 0xFF, 0xFF);
 
     
     for (int line = 0; line < 40; line++)
