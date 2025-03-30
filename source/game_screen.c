@@ -8,7 +8,7 @@
 
 #define MAX_ENEMIES 10
 #define MAX_ENEMY_PROJECTILES 10
-#define MAX_PLAYER_PROJECTILES 10
+#define MAX_PLAYER_PROJECTILES 50
 #define MAX_BULLETS (MAX_ENEMY_PROJECTILES + MAX_PLAYER_PROJECTILES)
 #define PLAYER_SPEED 4
 #define MIN_Y (50)
@@ -140,19 +140,38 @@ GameModeExit game_screen(GameState* global_state) {
 
         playerY = clamp(playerY, MIN_Y, MAX_Y);
 
-        snprintf(status, sizeof(status), "Lives: %03d Score: %04d Level: %02d", (*global_state).lives, (*global_state).score, (*global_state).level);
-        // printf("%s\n", status);
-        GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, status, 24, 0xFFFFFFFF);
-
-        GRRLIB_DrawImg(16, playerY, playerTexture, 0, 1, 1, 0xFFFFFFFF);
-
         if((held & WPAD_BUTTON_B) && (framesSinceLastFriendlyProjectile > 10)) {
             framesSinceLastFriendlyProjectile = 0;
+
+            int shots2Fire = 1;
+
+            // TODO: Adjust difficulty
+            if((*global_state).level > 1)
+                shots2Fire = 3;
+            if((*global_state).level > 5)
+                shots2Fire = 5;
+
             for(int i=0; i<MAX_PLAYER_PROJECTILES; i++) {
-                if(!projectiles[i].active) {
+                if(shots2Fire > 0 && !projectiles[i].active) {
                     printf("Firing friendly projectile %02d\n", i);
-                    projectiles[i] = (Projectile) { .x = 48, .y = playerY + (rand()%16)-8, .dx = 8, .dy = 0, .active = true, .friendly = true, .damage = 1 };
-                    break;
+
+                    int dy = 0;
+                    if (shots2Fire > 3)
+                        dy = (rand() % 16) - 8;
+                    else if(shots2Fire == 3)
+                        dy = 8;
+                    else if(shots2Fire == 2)
+                        dy = -8;
+
+                    int dx = 8;
+
+                    while((pow(dx, 2) + pow(dy, 2) > 64) && dx > 1)
+                    {
+                        dx--;
+                    }
+
+                    projectiles[i] = (Projectile) { .x = 48, .y = playerY + (rand()%16)-8, .dx = 8, .dy = dy, .active = true, .friendly = true, .damage = 1 };
+                    shots2Fire--;
                 }
             }
         }
@@ -320,6 +339,12 @@ GameModeExit game_screen(GameState* global_state) {
             return (GameModeExit) { .screen = SCREEN_GAME_OVER };
         }
         
+
+        snprintf(status, sizeof(status), "Lives: %03d Score: %04d Level: %02d", (*global_state).lives, (*global_state).score, (*global_state).level);
+        // printf("%s\n", status);
+        GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, status, 24, 0xFFFFFFFF);
+
+        GRRLIB_DrawImg(16, playerY, playerTexture, 0, 1, 1, 0xFFFFFFFF);
         GRRLIB_Render();
         framesSinceLastFriendlyProjectile++;
         framesSinceLastEnemySpawn++;
