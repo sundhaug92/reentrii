@@ -62,6 +62,20 @@ void updateLevel(GameState *global_state, int newScore)
 
 Projectile projectiles[MAX_BULLETS];
 
+bool fireProjectile(int x, int y, int dx, int dy, bool friendly, int damage)
+{
+    for (int i = 0; i < MAX_BULLETS; i++)
+    {
+        if (!projectiles[i].active)
+        {
+            printf("Firing projectile %02d at (%d, %d) with dx %d, dy %d, friendly %d, damage %d\n", i, x, y, dx, dy, friendly, damage);
+            projectiles[i] = (Projectile){.x = x, .y = y, .dx = dx, .dy = dy, .active = true, .friendly = friendly, .damage = damage};
+            return true;
+        }
+    }
+    return false;
+}
+
 GameModeExit game_screen(GameState *global_state)
 {
     GameModeExit next_screen = {.screen = SCREEN_SPLASH};
@@ -112,7 +126,6 @@ GameModeExit game_screen(GameState *global_state)
     int framesSinceLastFriendlyProjectile = 0;
     int framesSinceLastEnemyProjectile = 0;
 
-    Projectile projectiles[MAX_BULLETS];
     for (int i = 0; i < MAX_BULLETS; i++)
     {
         projectiles[i] = (Projectile){.active = false};
@@ -165,30 +178,30 @@ GameModeExit game_screen(GameState *global_state)
             if ((*global_state).level > 5)
                 shots2Fire = 5;
 
-            for (int i = 0; i < MAX_PLAYER_PROJECTILES; i++)
+            
+            while (shots2Fire > 0)
             {
-                if (shots2Fire > 0 && !projectiles[i].active)
+                int dy = 0;
+                if (shots2Fire > 3)
+                    dy = (rand() % 8) - 4;
+                else if (shots2Fire == 3)
+                    dy = 4;
+                else if (shots2Fire == 2)
+                    dy = -4;
+
+                int dx = 8;
+
+                while ((pow(dx, 2) + pow(dy, 2) > 64) && dx > 1)
                 {
-                    printf("Firing friendly projectile %02d\n", i);
-
-                    int dy = 0;
-                    if (shots2Fire > 3)
-                        dy = (rand() % 8) - 4;
-                    else if (shots2Fire == 3)
-                        dy = 8;
-                    else if (shots2Fire == 2)
-                        dy = -8;
-
-                    int dx = 8;
-
-                    while ((pow(dx, 2) + pow(dy, 2) > 64) && dx > 1)
-                    {
-                        dx--;
-                    }
-
-                    projectiles[i] = (Projectile){.x = 48, .y = playerY + (rand() % 16) - 8, .dx = 8, .dy = dy, .active = true, .friendly = true, .damage = 1};
-                    shots2Fire--;
+                    dx--;
                 }
+
+                printf("Firing friendly projectile of type %d\n", shots2Fire);
+                if(!fireProjectile(48, playerY + (rand() % 16) - 8, dx, dy, true, 1))
+                {
+                    printf("Failed to fire projectile\n");
+                }
+                shots2Fire--;
             }
         }
 
@@ -281,7 +294,7 @@ GameModeExit game_screen(GameState *global_state)
                 projectiles[i].x += projectiles[i].dx;
                 projectiles[i].y += projectiles[i].dy;
 
-                printf("Projectile %02d at %d, %d, friendly %d\n", i, projectiles[i].x, projectiles[i].y, projectiles[i].friendly);
+                // printf("Projectile %02d at %d, %d, friendly %d\n", i, projectiles[i].x, projectiles[i].y, projectiles[i].friendly);
 
                 for (int j = 0; j < MAX_BULLETS; j++)
                     if (projectiles[j].active && projectiles[j].friendly != projectiles[i].friendly)
@@ -325,7 +338,7 @@ GameModeExit game_screen(GameState *global_state)
                     }
                 }
 
-                if (projectiles[i].x < 0 || projectiles[i].x > 640)
+                if (projectiles[i].x < 0 || projectiles[i].x > 640 || projectiles[i].y < 0 || projectiles[i].y > 480)
                 {
                     printf("Deactivating projectile %02d\n", i);
                     projectiles[i].active = false;
