@@ -6,18 +6,18 @@
 #include <stdio.h>
 #include <math.h>
 
+#define clamp(x, min_value, max_value) ((x) < min_value ? min_value : ((x) > max_value ? max_value : (x)))
+
 #define MAX_ENEMIES 10
 #define MAX_ENEMY_PROJECTILES 10
 #define MAX_PLAYER_PROJECTILES 50
-#define MAX_BULLETS (MAX_ENEMY_PROJECTILES + MAX_PLAYER_PROJECTILES)
+#define MAX_BULLETS clamp(1000, MAX_PLAYER_PROJECTILES + MAX_ENEMY_PROJECTILES, 1000)
 #define PLAYER_SPEED 4
 #define MIN_Y (50)
 #define MAX_Y (480 - 50)
 
 #define MAX_ENEMY_SPEED 1
 #define MIN_ENEMY_SPEED 0
-
-#define clamp(x, min_value, max_value) ((x) < min_value ? min_value : ((x) > max_value ? max_value : (x)))
 
 typedef struct Projectile
 {
@@ -49,14 +49,16 @@ Enemy enemies[MAX_ENEMIES];
 
 int playerY;
 
+//                         1    2    3     4     5     6     7     8,    9,    10
+int level_thresholds[] = {100, 200, 500, 1000, 1500, 2000, 3000, 5000, 7500, 10000};
+
 void updateLevel(GameState *global_state, int newScore)
 {
     printf("Updating score from %d to %d\n", (*global_state).score, newScore);
-    int thresholds[] = {100, 200, 500, 1000, 1500, 2000, 3000, 5000};
 
-    for (int i = 0; i < sizeof(thresholds) / sizeof(thresholds[0]); i++)
+    for (int i = 0; i < sizeof(level_thresholds) / sizeof(level_thresholds[0]); i++)
     {
-        if ((*global_state).score < thresholds[i] && newScore >= thresholds[i])
+        if ((*global_state).score < level_thresholds[i] && newScore >= level_thresholds[i])
         {
             (*global_state).level++;
         }
@@ -291,10 +293,15 @@ GameModeExit game_screen(GameState *global_state)
 
     while (!(*global_state).exitRequested)
     {
-        if ((*global_state).level >= 10)
+        if ((*global_state).score >= 10000)
         {
             return (GameModeExit){.screen = SCREEN_VICTORY};
         }
+
+        if ((*global_state).level > 4)
+            enemySpawnRate = 10;
+        else if ((*global_state).level > 2)
+            enemySpawnRate = 30;
 
         WPAD_ScanPads();
         u32 held = WPAD_ButtonsHeld(0);
@@ -322,9 +329,9 @@ GameModeExit game_screen(GameState *global_state)
             int shots2Fire = 1;
 
             // TODO: Adjust difficulty
-            if ((*global_state).level > 1)
+            if ((*global_state).level > 4)
                 shots2Fire = 3;
-            if ((*global_state).level > 5)
+            if ((*global_state).level > 6)
                 shots2Fire = 5;
 
             while (shots2Fire > 0)
@@ -398,13 +405,16 @@ GameModeExit game_screen(GameState *global_state)
                     else if (enemyTypeRoll < 95 && maxEnemyType > 1)
                     {
                         enemyType = 1;
-                        enemyHealth = 3;
                     }
                     else if (enemyTypeRoll < 100 && maxEnemyType > 2)
                     {
                         enemyType = 2;
-                        enemyHealth = 10;
                     }
+
+                    if (enemyType == 1)
+                        enemyHealth = 10;
+                    else if (enemyType == 2)
+                        enemyHealth = 25;
 
                     enemies[availableSlot] = (Enemy){.x = enemyX, .y = enemyY, .dx = -clamp((rand() % 10), MIN_ENEMY_SPEED, MAX_ENEMY_SPEED * clamp((*global_state).level, 1, 5)), .dy = 0, .active = true, .health = enemyHealth, .enemyType = enemyType, .framesToNextMove = 10};
                     printf("Enemy %02d at %d, %d\n", availableSlot, enemies[availableSlot].x, enemies[availableSlot].y);
