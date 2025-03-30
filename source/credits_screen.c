@@ -43,7 +43,7 @@ GameModeExit credits_screen(GameState* global_state) {
             break;
         }
 
-        if (bg_y < -500)
+        if (bg_y < -480)
         {
             printf("\n\nCredits screen done\n");
             printf("bg_y: %d\n", bg_y);
