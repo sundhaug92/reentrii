@@ -48,6 +48,7 @@ GameModeExit story_screen(GameState* global_state) {
 
     int y = 480;
 
+    GameModeExit next_screen = { .screen = SCREEN_GAME };
 
     for (int frame = 0; frame < 60 * 20; frame++)
     {
@@ -61,12 +62,12 @@ GameModeExit story_screen(GameState* global_state) {
 
         WPAD_ScanPads();
         u32 pressed = WPAD_ButtonsDown(0);
-        if(pressed & WPAD_BUTTON_HOME) {
+        if(pressed & WPAD_BUTTON_1 || pressed & WPAD_BUTTON_2 || pressed & WPAD_BUTTON_A || pressed & WPAD_BUTTON_B) {
             break;
         }
 
         GRRLIB_Render();
     }
     GRRLIB_FreeTexture(storyBg);
-    return (GameModeExit) { .screen = SCREEN_GAME };
+    return next_screen;
 }
