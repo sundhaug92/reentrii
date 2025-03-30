@@ -51,7 +51,6 @@ void updateLevel(GameState* global_state, int newScore) {
     for(int i=0; i<sizeof(thresholds)/sizeof(thresholds[0]); i++) {
         if((*global_state).score < thresholds[i] && newScore >= thresholds[i]) {
             (*global_state).level ++;
-            break;
         }
     }
 
@@ -142,7 +141,7 @@ GameModeExit game_screen(GameState* global_state) {
         playerY = clamp(playerY, MIN_Y, MAX_Y);
 
         snprintf(status, sizeof(status), "Lives: %03d Score: %04d Level: %02d", (*global_state).lives, (*global_state).score, (*global_state).level);
-        printf("%s\n", status);
+        // printf("%s\n", status);
         GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, status, 24, 0xFFFFFFFF);
 
         GRRLIB_DrawImg(16, playerY, playerTexture, 0, 1, 1, 0xFFFFFFFF);
