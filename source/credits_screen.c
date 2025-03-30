@@ -7,17 +7,17 @@
 #include "credits1_png.h"
 #include "credits_bg1_png.h"
 
-GameModeExit credits_screen(GameState* state) {
+GameModeExit credits_screen(GameState* global_state) {
     GRRLIB_texImg *creditsBg1 = GRRLIB_LoadTexture(credits_bg1_png);
     GRRLIB_texImg *credits1 = GRRLIB_LoadTexture(credits1_png);
 
     if(creditsBg1 == NULL) {
-        strcpy((*state).message[0], "Failed to load credits background 1");
+        strcpy((*global_state).message[0], "Failed to load credits background 1");
         return (GameModeExit) { .screen = SCREEN_ERROR };
     }
 
     if(credits1 == NULL) {
-        strcpy((*state).message[0], "Failed to load credits image 1");
+        strcpy((*global_state).message[0], "Failed to load credits image 1");
         return (GameModeExit) { .screen = SCREEN_ERROR };
     }
 
@@ -55,5 +55,6 @@ GameModeExit credits_screen(GameState* state) {
         GRRLIB_Render();
     }
     GRRLIB_FreeTexture(creditsBg1);
+    GRRLIB_FreeTexture(credits1);
     return (GameModeExit) { .screen = SCREEN_SPLASH };
 }

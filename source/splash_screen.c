@@ -10,6 +10,7 @@
 #define PROMPT_ALPHA_SPEED 1
 
 GameModeExit splash_screen(GameState* global_state) {
+    GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
     GRRLIB_texImg *titleImg = GRRLIB_LoadTexture(title_png);
 
     if(titleImg == NULL) {
@@ -18,7 +19,7 @@ GameModeExit splash_screen(GameState* global_state) {
     }
 
     // TODO: Consider using an actual texture for the prompt
-    GRRLIB_texImg *promptImg = GRRLIB_CreateEmptyTexture(640, 480);
+    GRRLIB_texImg *promptImg = GRRLIB_CreateEmptyTexture(640, 32);
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "Press 1 for game, press 2 for credits", 24, 0xFFFFFFFF);
     GRRLIB_CompoEnd(0,0, promptImg);
@@ -54,28 +55,32 @@ GameModeExit splash_screen(GameState* global_state) {
             (cheat_counter == 10 && RIGHT_PRESSED) ||
             (cheat_counter == 12 && LEFT_PRESSED) ||
             (cheat_counter == 14 && RIGHT_PRESSED) ||
-            (cheat_counter == 16 && LEFT_PRESSED) ||
-            (cheat_counter == 18 && B_PRESSED) ||
-            (cheat_counter == 20 && A_PRESSED)
+            (cheat_counter == 16 && B_PRESSED) ||
+            (cheat_counter == 18 && A_PRESSED)
         ) {
             cheat_counter++;
+            printf("Cheat counter: %d\n", cheat_counter);
         }
         else if(pressed == 0 && (cheat_counter & 1) == 1) {
             cheat_counter++;
+            printf("Cheat counter: %d\n", cheat_counter);
         }
         else if(pressed > 0) {
+            printf("Cheat counter reset\n");
             cheat_counter = 0;
         }
 
         if(cheat_counter == 20) {
+            printf("Enabling cheats\n");
             (*global_state).cheatsEnabled = true;
+            cheat_counter = 0; // Prevent spamming the log
         }
 
         if(pressed & WPAD_BUTTON_HOME) {
             break;
         }
         else if (pressed & WPAD_BUTTON_1) {
-            next_screen = SCREEN_GAME;
+            next_screen = SCREEN_STORY;
             break;
         }
         else if (pressed & WPAD_BUTTON_2) {
@@ -116,5 +121,6 @@ GameModeExit splash_screen(GameState* global_state) {
 
     GRRLIB_FreeTexture(titleImg);
     GRRLIB_FreeTexture(promptImg);
+    
     return (GameModeExit) { .screen = next_screen };
 }

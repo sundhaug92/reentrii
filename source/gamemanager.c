@@ -37,8 +37,22 @@ int main(int argc, char **argv) {
             case SCREEN_CREDITS:
                 currentMode = credits_screen(&global_state);
                 break;
+            case SCREEN_GAME:
+                currentMode = game_screen(&global_state);
+                break;
+            // TODO: Implement these screens
+            // case SCREEN_GAME_OVER:
+            //     currentMode = game_over_screen(&global_state);
+            //     break;
+            // case SCREEN_VICTORY:
+            //     currentMode = victory_screen(&global_state);
+            //     break;
+            case SCREEN_STORY:
+                currentMode = story_screen(&global_state);
+                break;
             default:
                 snprintf(global_state.message[0], sizeof(global_state.message[0]), "Unknown screen %d", currentMode.screen);
+                // Fall through here and display the error screen
             case SCREEN_ERROR:
                 currentMode = error_screen(&global_state);
                 break;
