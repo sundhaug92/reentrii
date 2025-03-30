@@ -42,6 +42,7 @@ typedef struct Enemy
     bool active;
     int health;
     int enemyType;
+    int framesToNextFire;
 } Enemy;
 
 Enemy enemies[MAX_ENEMIES];
@@ -117,30 +118,40 @@ void drawAndDeactivateProjectiles(GameState *global_state, GRRLIB_texImg *enemyP
                     }
                 }
 
-            for (int j = 0; j < MAX_ENEMIES; j++)
-            {
-                if (enemies[j].active)
+            if (projectiles[i].friendly)
+                for (int j = 0; j < MAX_ENEMIES; j++)
                 {
-                    if (abs(enemies[j].x - projectiles[i].x) < 32 && abs(enemies[j].y - projectiles[i].y) < 32)
+                    if (enemies[j].active)
                     {
-                        printf("Projectile %02d hit enemy %02d\n", i, j);
-                        projectiles[i].active = false;
-                        enemies[j].health--;
-                        if (enemies[j].health <= 0)
+                        if (abs(enemies[j].x - projectiles[i].x) < 32 && abs(enemies[j].y - projectiles[i].y) < 32)
                         {
-                            printf("Deactivating enemy %02d\n", j);
-                            enemies[j].active = false;
+                            printf("Projectile %02d hit enemy %02d\n", i, j);
+                            projectiles[i].active = false;
+                            enemies[j].health--;
+                            if (enemies[j].health <= 0)
+                            {
+                                printf("Deactivating enemy %02d\n", j);
+                                enemies[j].active = false;
 
-                            int scoreChange = 10;
-                            if (enemies[j].enemyType == 1)
-                                scoreChange = 20;
-                            else if (enemies[j].enemyType == 2)
-                                scoreChange = 50;
-                            updateLevel(global_state, (*global_state).score + scoreChange);
+                                int scoreChange = 10;
+                                if (enemies[j].enemyType == 1)
+                                    scoreChange = 20;
+                                else if (enemies[j].enemyType == 2)
+                                    scoreChange = 50;
+                                updateLevel(global_state, (*global_state).score + scoreChange);
 
-                            break;
+                                break;
+                            }
                         }
                     }
+                }
+            else // enemy projectile
+            {
+                if (pow(playerY - projectiles[i].y, 2) + pow(projectiles[i].x, 2) < 32 * 32)
+                {
+                    printf("Projectile %02d hit player\n", i);
+                    projectiles[i].active = false;
+                    (*global_state).lives -= projectiles[i].damage;
                 }
             }
 
@@ -185,6 +196,13 @@ void drawAndDeactivateEnemies(GameState *global_state, GRRLIB_texImg *enemy1Text
                 enemies[i].y += enemies[i].dy;
                 enemies[i].framesToNextMove = 10;
             }
+
+            if (enemies[i].framesToNextFire-- <= 0 && enemies[i].enemyType > 0)
+            {
+                enemies[i].framesToNextFire = 60;
+                fireProjectile(enemies[i].x, enemies[i].y, -4, 0, false, 1);
+            }
+
             if (enemies[i].x < 0)
             {
                 printf("Deactivating enemy %02d\n", i);
@@ -257,7 +275,6 @@ GameModeExit game_screen(GameState *global_state)
     GRRLIB_CompoEnd(0, 0, enemyProjectileTexture);
 
     int framesSinceLastFriendlyProjectile = 0;
-    int framesSinceLastEnemyProjectile = 0;
 
     for (int i = 0; i < MAX_BULLETS; i++)
     {
@@ -417,7 +434,6 @@ GameModeExit game_screen(GameState *global_state)
         GRRLIB_Render();
         framesSinceLastFriendlyProjectile++;
         framesSinceLastEnemySpawn++;
-        framesSinceLastEnemyProjectile++;
     }
 
     GRRLIB_FreeTexture(playerTexture);
