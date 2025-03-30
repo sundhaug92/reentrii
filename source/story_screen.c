@@ -10,7 +10,7 @@ char story[][80] = {
     "The evil Doctor Lentokentta has",
     "stolen the retro-pack of the elders",
     "and is using it to power his",
-    "time machine. He plans to go back",
+    "time machine. They plan to go back",
     "in time and prevent the creation",
     "of the space-shuttle",
     "",
