@@ -226,7 +226,7 @@ GameModeExit game_screen(GameState *global_state)
 
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
-    GRRLIB_texImg *playerTexture = GRRLIB_CreateEmptyTexture(32, 32);
+    GRRLIB_texImg *playerTexture = GRRLIB_CreateEmptyTexture(24, 32);
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "C", 32, 0xFFFFFFFF);
     GRRLIB_CompoEnd(0, 0, playerTexture);
@@ -236,17 +236,17 @@ GameModeExit game_screen(GameState *global_state)
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "->", 24, 0xFFFFFFFF);
     GRRLIB_CompoEnd(0, 0, friendlyProjectileTexture);
 
-    GRRLIB_texImg *enemy1Texture = GRRLIB_CreateEmptyTexture(32, 32);
+    GRRLIB_texImg *enemy1Texture = GRRLIB_CreateEmptyTexture(24, 32);
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "E", 32, 0xFFFFFFFF);
     GRRLIB_CompoEnd(0, 0, enemy1Texture);
 
-    GRRLIB_texImg *enemy2Texture = GRRLIB_CreateEmptyTexture(32, 32);
+    GRRLIB_texImg *enemy2Texture = GRRLIB_CreateEmptyTexture(24, 32);
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "E", 32, 0xFFFF00FF);
     GRRLIB_CompoEnd(0, 0, enemy2Texture);
 
-    GRRLIB_texImg *enemy3Texture = GRRLIB_CreateEmptyTexture(32, 32);
+    GRRLIB_texImg *enemy3Texture = GRRLIB_CreateEmptyTexture(24, 32);
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "E", 32, 0xFF0000FF);
     GRRLIB_CompoEnd(0, 0, enemy3Texture);
