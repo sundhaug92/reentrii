@@ -4,10 +4,15 @@
 #include "title_png.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "orion_png.h"
 
 #define PROMPT_ALPHA_MIN 64
 #define PROMPT_ALPHA_MAX 255
 #define PROMPT_ALPHA_SPEED 1
+
+#define ORION_X 140
+#define ORION_Y 220
+#define ORION_SCALE .5f
 
 GameModeExit splash_screen(GameState *global_state)
 {
@@ -17,6 +22,13 @@ GameModeExit splash_screen(GameState *global_state)
     if (titleImg == NULL)
     {
         strcpy((*global_state).message[0], "Failed to load title image");
+        return (GameModeExit){.screen = SCREEN_ERROR};
+    }
+
+    GRRLIB_texImg *orionImg = GRRLIB_LoadTexture(orion_png);
+    if (orionImg == NULL)
+    {
+        strcpy((*global_state).message[0], "Failed to load orion image");
         return (GameModeExit){.screen = SCREEN_ERROR};
     }
 
@@ -115,6 +127,7 @@ GameModeExit splash_screen(GameState *global_state)
         }
 
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | main_alpha);
+        GRRLIB_DrawImg(ORION_X, ORION_Y, orionImg, 0, 1, 1, (0xFFFFFF << 8) | main_alpha);
         GRRLIB_DrawImg(0, 480 - 24, promptImg, 0, 1, 1, (0xFFFFFF << 8) | prompt_alpha);
 
         if ((*global_state).cheatsEnabled)
@@ -126,6 +139,7 @@ GameModeExit splash_screen(GameState *global_state)
     for (int fade = 255; fade > 0; fade -= 4)
     {
         GRRLIB_DrawImg(0, 0, titleImg, 0, 1, 1, (0xFFFFFF << 8) | fade);
+        GRRLIB_DrawImg(ORION_X, ORION_Y, orionImg, 0, 1, 1, (0xFFFFFF << 8) | fade);
         if ((*global_state).cheatsEnabled)
             GRRLIB_PrintfTTF(193, 200, (*global_state).basicFont, "CHEATS ENABLED", 32, (0xFFFF00 << 8) | fade);
         GRRLIB_Render();
@@ -133,6 +147,8 @@ GameModeExit splash_screen(GameState *global_state)
 
     GRRLIB_FreeTexture(titleImg);
     GRRLIB_FreeTexture(promptImg);
+    GRRLIB_FreeTexture(orionImg);
+
 
     return (GameModeExit){.screen = next_screen};
 }
