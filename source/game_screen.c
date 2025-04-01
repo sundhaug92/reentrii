@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "orion_png.h"
+#include "hst1_png.h"
+#include "hst2_png.h"
+#include "hst3_png.h"
 
 #define clamp(x, min_value, max_value) ((x) < min_value ? min_value : ((x) > max_value ? max_value : (x)))
 
@@ -15,6 +19,7 @@
 #define PLAYER_SPEED 4
 #define MIN_Y (50)
 #define MAX_Y (480 - 50)
+#define PLAYER_X 32
 
 #define MAX_ENEMY_SPEED 1
 #define MIN_ENEMY_SPEED 0
@@ -149,7 +154,7 @@ void drawAndDeactivateProjectiles(GameState *global_state, GRRLIB_texImg *enemyP
                 }
             else // enemy projectile
             {
-                if (pow(playerY - projectiles[i].y, 2) + pow(projectiles[i].x, 2) < 32 * 32)
+                if (pow(playerY - projectiles[i].y, 2) + pow(PLAYER_X - projectiles[i].x, 2) < 32 * 32)
                 {
                     printf("Projectile %02d hit player\n", i);
                     projectiles[i].active = false;
@@ -246,10 +251,7 @@ GameModeExit game_screen(GameState *global_state)
 
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
-    GRRLIB_texImg *playerTexture = GRRLIB_CreateEmptyTexture(24, 32);
-    GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "C", 32, 0xFFFFFFFF);
-    GRRLIB_CompoEnd(0, 0, playerTexture);
+    GRRLIB_texImg *playerTexture = GRRLIB_LoadTexture(orion_png);
 
     GRRLIB_texImg *friendlyProjectileTexture = GRRLIB_CreateEmptyTexture(32, 32);
     GRRLIB_CompoStart();
@@ -275,6 +277,10 @@ GameModeExit game_screen(GameState *global_state)
     GRRLIB_CompoStart();
     GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "<-", 24, 0xFFFFFFFF);
     GRRLIB_CompoEnd(0, 0, enemyProjectileTexture);
+
+    GRRLIB_texImg *hst1 = GRRLIB_LoadTexture(hst1_png);
+    GRRLIB_texImg *hst2 = GRRLIB_LoadTexture(hst2_png);
+    GRRLIB_texImg *hst3 = GRRLIB_LoadTexture(hst3_png);
 
     int framesSinceLastFriendlyProjectile = 0;
 
@@ -303,6 +309,12 @@ GameModeExit game_screen(GameState *global_state)
         else if ((*global_state).level > 2)
             enemySpawnRate = 30;
 
+        if(!(*global_state).level >= 6)
+            GRRLIB_DrawImg(0, 0, hst3, 0, 1, 1, 0xFFFFFFFF);
+        else if((*global_state).level > 3)
+            GRRLIB_DrawImg(0, 0, hst2, 0, 1, 1, 0xFFFFFFFF);
+        else
+            GRRLIB_DrawImg(0, 0, hst1, 0, 1, 1, 0xFFFFFFFF);
         WPAD_ScanPads();
         u32 held = WPAD_ButtonsHeld(0);
 
@@ -352,7 +364,7 @@ GameModeExit game_screen(GameState *global_state)
                 }
 
                 printf("Firing friendly projectile of type %d\n", shots2Fire);
-                if (!fireProjectile(48, playerY + (rand() % 16) - 8, dx, dy, true, 1))
+                if (!fireProjectile(32, playerY + (rand() % 16) - 8, dx, dy, true, 1))
                 {
                     printf("Failed to fire projectile\n");
                 }
@@ -440,7 +452,7 @@ GameModeExit game_screen(GameState *global_state)
         // printf("%s\n", status);
         GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, status, 24, 0xFFFFFFFF);
 
-        GRRLIB_DrawImg(16, playerY, playerTexture, 0, 1, 1, 0xFFFFFFFF);
+        GRRLIB_DrawImg(PLAYER_X, playerY, playerTexture, 90, (32.0f/216.0f), (32.0f/384.0f), 0xFFFFFFFF);
         GRRLIB_Render();
         framesSinceLastFriendlyProjectile++;
         framesSinceLastEnemySpawn++;
