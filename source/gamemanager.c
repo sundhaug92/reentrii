@@ -44,9 +44,9 @@ int main(int argc, char **argv)
             currentMode = game_screen(&global_state);
             break;
         // TODO: Implement these screens
-        // case SCREEN_GAME_OVER:
-        //     currentMode = game_over_screen(&global_state);
-        //     break;
+        case SCREEN_GAME_OVER:
+            currentMode = gameover_screen(&global_state);
+            break;
         // case SCREEN_VICTORY:
         //     currentMode = victory_screen(&global_state);
         //     break;
