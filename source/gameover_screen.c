@@ -10,6 +10,13 @@ GameModeExit gameover_screen(GameState *global_state)
     GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
 
     char message[40][80];
+    
+    for (int line = 0; line < 40; line++)
+        snprintf(message[line], 80, " ");
+
+    #ifdef DEBUG
+    printf("GO: Entering gameover_screen\n");
+    #endif
 
     if ((*global_state).cheatsEnabled)
         snprintf(message[0], 80, "Despite your best cheating,");
@@ -28,6 +35,14 @@ GameModeExit gameover_screen(GameState *global_state)
     }
 
     snprintf(message[3], 80, "Better luck next time.");
+
+    #ifdef DEBUG
+    printf("GO: Message:\n");
+    for (int line = 0; line < 40; line++)
+    {
+        printf("GO: %s\n", message[line]);
+    }
+    #endif
 
     while (!(*global_state).exitRequested)
     {

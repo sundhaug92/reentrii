@@ -40,6 +40,9 @@ int main(int argc, char **argv)
 
     while ((currentMode.screen != SCREEN_EXIT) && !global_state.exitRequested)
     {
+        #ifdef DEBUG
+        printf("GM: Switching to screen %d\n", currentMode.screen);
+        #endif
         switch (currentMode.screen)
         {
         case SCREEN_SPLASH:
