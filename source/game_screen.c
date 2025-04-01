@@ -9,6 +9,11 @@
 #include "hst1_png.h"
 #include "hst2_png.h"
 #include "hst3_png.h"
+#include "bullet_friendly_png.h"
+#include "bullet_hostile_png.h"
+#include "f16_png.h"
+#include "f15_png.h"
+#include "f22_png.h"
 
 #define clamp(x, min_value, max_value) ((x) < min_value ? min_value : ((x) > max_value ? max_value : (x)))
 
@@ -253,30 +258,13 @@ GameModeExit game_screen(GameState *global_state)
 
     GRRLIB_texImg *playerTexture = GRRLIB_LoadTexture(orion_png);
 
-    GRRLIB_texImg *friendlyProjectileTexture = GRRLIB_CreateEmptyTexture(32, 32);
-    GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "->", 24, 0xFFFFFFFF);
-    GRRLIB_CompoEnd(0, 0, friendlyProjectileTexture);
+    GRRLIB_texImg *friendlyProjectileTexture = GRRLIB_LoadTexture(bullet_friendly_png);
 
-    GRRLIB_texImg *enemy1Texture = GRRLIB_CreateEmptyTexture(24, 32);
-    GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "E", 32, 0xFFFFFFFF);
-    GRRLIB_CompoEnd(0, 0, enemy1Texture);
+    GRRLIB_texImg *enemy1Texture = GRRLIB_LoadTexture(f16_png);
+    GRRLIB_texImg *enemy2Texture = GRRLIB_LoadTexture(f15_png);
+    GRRLIB_texImg *enemy3Texture = GRRLIB_LoadTexture(f22_png);
 
-    GRRLIB_texImg *enemy2Texture = GRRLIB_CreateEmptyTexture(24, 32);
-    GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "E", 32, 0xFFFF00FF);
-    GRRLIB_CompoEnd(0, 0, enemy2Texture);
-
-    GRRLIB_texImg *enemy3Texture = GRRLIB_CreateEmptyTexture(24, 32);
-    GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "E", 32, 0xFF0000FF);
-    GRRLIB_CompoEnd(0, 0, enemy3Texture);
-
-    GRRLIB_texImg *enemyProjectileTexture = GRRLIB_CreateEmptyTexture(32, 32);
-    GRRLIB_CompoStart();
-    GRRLIB_PrintfTTF(0, 0, (*global_state).basicFont, "<-", 24, 0xFFFFFFFF);
-    GRRLIB_CompoEnd(0, 0, enemyProjectileTexture);
+    GRRLIB_texImg *enemyProjectileTexture = GRRLIB_LoadTexture(bullet_hostile_png);
 
     GRRLIB_texImg *hst1 = GRRLIB_LoadTexture(hst1_png);
     GRRLIB_texImg *hst2 = GRRLIB_LoadTexture(hst2_png);
@@ -309,7 +297,7 @@ GameModeExit game_screen(GameState *global_state)
         else if ((*global_state).level > 2)
             enemySpawnRate = 30;
 
-        if(!(*global_state).level >= 6)
+        if((*global_state).level >= 6)
             GRRLIB_DrawImg(0, 0, hst3, 0, 1, 1, 0xFFFFFFFF);
         else if((*global_state).level > 3)
             GRRLIB_DrawImg(0, 0, hst2, 0, 1, 1, 0xFFFFFFFF);
@@ -445,8 +433,8 @@ GameModeExit game_screen(GameState *global_state)
             return (GameModeExit){.screen = SCREEN_GAME_OVER};
         }
 
-        drawAndDeactivateProjectiles(global_state, enemyProjectileTexture, friendlyProjectileTexture);
         drawAndDeactivateEnemies(global_state, enemy1Texture, enemy2Texture, enemy3Texture);
+        drawAndDeactivateProjectiles(global_state, enemyProjectileTexture, friendlyProjectileTexture);
 
         snprintf(status, sizeof(status), "Lives: %03d Score: %04d Level: %02d", (*global_state).lives, (*global_state).score, (*global_state).level);
         // printf("%s\n", status);
