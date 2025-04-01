@@ -38,11 +38,15 @@ GameModeExit credits_screen(GameState *global_state)
 
         if(y <= -480)
         {
-            GRRLIB_PrintfTTF(100, 200 + 0, (*global_state).basicFont, "Original pictures of Orion/Agena", 16, 0xFFFFFFFF);
-            GRRLIB_PrintfTTF(100, 200 + 24, (*global_state).basicFont, "National Air and Space Administration", 16, 0xFFFFFFFF);
-            GRRLIB_PrintfTTF(100, 200 + 48, (*global_state).basicFont, "European Space Agency", 16, 0xFFFFFFFF);
-            GRRLIB_PrintfTTF(100, 200 + 96, (*global_state).basicFont, "Original pictures of aeroplanes and ASM-135 ASAT", 16, 0xFFFFFFFF);
-            GRRLIB_PrintfTTF(100, 200 + 120, (*global_state).basicFont, "United States Air Force", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*0), (*global_state).basicFont, "Original pictures of Orion/Agena", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*1), (*global_state).basicFont, "National Air and Space Administration", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*2), (*global_state).basicFont, "European Space Agency", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*4), (*global_state).basicFont, "Original pictures of aeroplanes and ASM-135 ASAT", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*5), (*global_state).basicFont, "United States Air Force", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*7), (*global_state).basicFont, "Thanks to", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*8), (*global_state).basicFont, "GRRLIB", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + (24*9), (*global_state).basicFont, "DevkitPPC", 16, 0xFFFFFFFF);
+
         }
 
         y -= 1;
