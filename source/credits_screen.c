@@ -28,7 +28,7 @@ GameModeExit credits_screen(GameState *global_state)
 
     int y = 480;
 
-    while (true)
+    while (!(*global_state).exitRequested)
     {
         int bg_y = y <= 0 ? y / 2 : 0;
         GRRLIB_DrawImg(0, bg_y, creditsBg1, 0, 1, 1, RGBA(255, 255, 255, 255));

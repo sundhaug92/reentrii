@@ -8,6 +8,11 @@
 #include "FreeMonoBold_ttf.h"
 
 #include "gamemanager.h"
+s8 HWButton = -1;
+GameState global_state;
+void WiiResetPressed() { global_state.exitRequested=true; HWButton = SYS_RETURNTOMENU; }
+void WiiPowerPressed() { global_state.exitRequested=true; HWButton = SYS_POWEROFF_STANDBY; }
+void WiimotePowerPressed(s32 chan) { global_state.exitRequested=true; HWButton = SYS_POWEROFF_STANDBY; }
 
 int main(int argc, char **argv)
 {
@@ -15,11 +20,14 @@ int main(int argc, char **argv)
     GRRLIB_Init();
     WPAD_Init();
     srand(time(NULL));
+    
+    SYS_SetResetCallback(WiiResetPressed);
+	SYS_SetPowerCallback(WiiPowerPressed);
+	WPAD_SetPowerButtonCallback(WiimotePowerPressed);
 
-    GameState global_state = {
-        .basicFont = GRRLIB_LoadTTF(FreeMonoBold_ttf, FreeMonoBold_ttf_size),
-        .frameCount = 0,
-        .cheatsEnabled = false};
+    global_state.basicFont = GRRLIB_LoadTTF(FreeMonoBold_ttf, FreeMonoBold_ttf_size);
+    global_state.frameCount = 0;
+    global_state.cheatsEnabled = false;
 
     for (int line = 0; line < 40; line++)
     {
@@ -30,7 +38,7 @@ int main(int argc, char **argv)
 
     SYS_STDIO_Report(true);
 
-    while (currentMode.screen != SCREEN_EXIT)
+    while ((currentMode.screen != SCREEN_EXIT) && !global_state.exitRequested)
     {
         switch (currentMode.screen)
         {
@@ -64,7 +72,15 @@ int main(int argc, char **argv)
         GX_WaitDrawDone();
     }
 
+    if(HWButton != -1)
+        SYS_ResetSystem(HWButton, 0, 0);
+
     GRRLIB_Exit();
     WPAD_Shutdown();
+
+    if(HWButton != -1)
+        SYS_ResetSystem(HWButton, 0, 0);
+
+    
     exit(0);
 }

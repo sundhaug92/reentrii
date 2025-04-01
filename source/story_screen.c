@@ -51,7 +51,7 @@ GameModeExit story_screen(GameState *global_state)
 
     GameModeExit next_screen = {.screen = SCREEN_GAME};
 
-    for (int frame = 0; frame < 60 * 20; frame++)
+    for (int frame = 0; frame < 60 * 20 && !(*global_state).exitRequested; frame++)
     {
         int bg_y = y <= 0 ? y / 2 : 0;
         GRRLIB_DrawImg(0, bg_y, storyBg, 0, 1, 1, RGBA(255, 255, 255, 255));
