@@ -56,10 +56,12 @@ GameModeExit credits_screen(GameState *global_state)
 
         if (bg_y < -480)
         {
+            #ifdef DEBUG
             printf("\n\nCredits screen done\n");
             printf("bg_y: %d\n", bg_y);
             printf("creditsBg1->h: %d\n", creditsBg1->h);
             printf("rmode->viHeight: %d\n", rmode->viHeight);
+            #endif
             break;
         }
 

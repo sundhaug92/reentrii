@@ -74,22 +74,32 @@ GameModeExit splash_screen(GameState *global_state)
             (cheat_counter == 18 && A_PRESSED))
         {
             cheat_counter++;
+            #ifdef DEBUG
             printf("Cheat counter: %d\n", cheat_counter);
+            #endif
         }
         else if (pressed == 0 && (cheat_counter & 1) == 1)
         {
             cheat_counter++;
+            
+            #ifdef DEBUG
             printf("Cheat counter: %d\n", cheat_counter);
+            #endif
         }
         else if (pressed > 0)
         {
+            
+            #ifdef DEBUG
             printf("Cheat counter reset\n");
+            #endif
             cheat_counter = 0;
         }
 
         if (cheat_counter == 20)
         {
+            #ifdef DEBUG
             printf("Enabling cheats\n");
+            #endif
             (*global_state).cheatsEnabled = true;
             cheat_counter = 0; // Prevent spamming the log
         }

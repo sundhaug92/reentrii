@@ -64,7 +64,9 @@ int level_thresholds[] = {100, 200, 500, 1000, 1500, 2000, 3000, 5000, 7500, 100
 
 void updateLevel(GameState *global_state, int newScore)
 {
+    #ifdef DEBUG
     printf("Updating score from %d to %d\n", (*global_state).score, newScore);
+    #endif
 
     for (int i = 0; i < sizeof(level_thresholds) / sizeof(level_thresholds[0]); i++)
     {
@@ -96,7 +98,9 @@ bool fireProjectile(int x, int y, int dx, int dy, bool friendly, int damage)
     {
         if (!projectiles[i].active)
         {
+            #ifdef DEBUG
             printf("Firing projectile %02d at (%d, %d) with dx %d, dy %d, friendly %d, damage %d\n", i, x, y, dx, dy, friendly, damage);
+            #endif
             projectiles[i] = (Projectile){.x = x, .y = y, .dx = dx, .dy = dy, .active = true, .friendly = friendly, .damage = damage};
             return true;
         }
@@ -120,7 +124,9 @@ void drawAndDeactivateProjectiles(GameState *global_state, GRRLIB_texImg *enemyP
                 {
                     if (abs(projectiles[j].x - projectiles[i].x) < 32 && abs(projectiles[j].y - projectiles[i].y) < 32)
                     {
+                        #ifdef DEBUG
                         printf("Projectile %02d hit projectile %02d\n", i, j);
+                        #endif
                         projectiles[i].active = false;
                         projectiles[j].active = false;
 
@@ -137,12 +143,16 @@ void drawAndDeactivateProjectiles(GameState *global_state, GRRLIB_texImg *enemyP
                     {
                         if (abs(enemies[j].x - projectiles[i].x) < 32 && abs(enemies[j].y - projectiles[i].y) < 32)
                         {
+                            #ifdef DEBUG
                             printf("Projectile %02d hit enemy %02d\n", i, j);
+                            #endif
                             projectiles[i].active = false;
                             enemies[j].health--;
                             if (enemies[j].health <= 0)
                             {
+                                #ifdef DEBUG
                                 printf("Deactivating enemy %02d\n", j);
+                                #endif
                                 enemies[j].active = false;
 
                                 int scoreChange = 10;
@@ -161,7 +171,9 @@ void drawAndDeactivateProjectiles(GameState *global_state, GRRLIB_texImg *enemyP
             {
                 if (pow(playerY - projectiles[i].y, 2) + pow(PLAYER_X - projectiles[i].x, 2) < 32 * 32)
                 {
+                    #ifdef DEBUG
                     printf("Projectile %02d hit player\n", i);
+                    #endif
                     projectiles[i].active = false;
                     (*global_state).lives -= projectiles[i].damage;
                 }
@@ -169,7 +181,9 @@ void drawAndDeactivateProjectiles(GameState *global_state, GRRLIB_texImg *enemyP
 
             if (projectiles[i].x < 0 || projectiles[i].x > 640 || projectiles[i].y < 0 || projectiles[i].y > 480)
             {
+                #ifdef DEBUG
                 printf("Deactivating projectile %02d\n", i);
+                #endif
                 projectiles[i].active = false;
             }
             else
@@ -217,7 +231,9 @@ void drawAndDeactivateEnemies(GameState *global_state, GRRLIB_texImg *enemy1Text
 
             if (enemies[i].x < 0)
             {
+                #ifdef DEBUG
                 printf("Deactivating enemy %02d\n", i);
+                #endif
                 enemies[i].active = false;
                 (*global_state).lives -= 5 * enemies[i].health;
             }
@@ -351,10 +367,14 @@ GameModeExit game_screen(GameState *global_state)
                     dx--;
                 }
 
+                #ifdef DEBUG
                 printf("Firing friendly projectile of type %d\n", shots2Fire);
+                #endif
                 if (!fireProjectile(32, playerY + (rand() % 16) - 8, dx, dy, true, 1))
                 {
+                    #ifdef DEBUG
                     printf("Failed to fire projectile\n");
+                    #endif
                 }
                 shots2Fire--;
             }
@@ -368,7 +388,9 @@ GameModeExit game_screen(GameState *global_state)
 
             if (availableSlot != -1)
             {
+                #ifdef DEBUG
                 printf("Attempt to spawn enemy %02d\n", availableSlot);
+                #endif
 
                 bool mustChangePos = false;
 
@@ -417,11 +439,15 @@ GameModeExit game_screen(GameState *global_state)
                         enemyHealth = 25;
 
                     enemies[availableSlot] = (Enemy){.x = enemyX, .y = enemyY, .dx = -clamp((rand() % 10), MIN_ENEMY_SPEED, MAX_ENEMY_SPEED * clamp((*global_state).level, 1, 5)), .dy = 0, .active = true, .health = enemyHealth, .enemyType = enemyType, .framesToNextMove = 10};
+                    #ifdef DEBUG
                     printf("Enemy %02d at %d, %d\n", availableSlot, enemies[availableSlot].x, enemies[availableSlot].y);
+                    #endif
                 }
                 else
                 {
+                    #ifdef DEBUG
                     printf("Failed to spawn enemy %02d\n", availableSlot);
+                    #endif
                 }
             }
         }
