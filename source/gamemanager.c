@@ -47,9 +47,9 @@ int main(int argc, char **argv)
         case SCREEN_GAME_OVER:
             currentMode = gameover_screen(&global_state);
             break;
-        // case SCREEN_VICTORY:
-        //     currentMode = victory_screen(&global_state);
-        //     break;
+        case SCREEN_VICTORY:
+            currentMode = victory_screen(&global_state);
+            break;
         case SCREEN_STORY:
             currentMode = story_screen(&global_state);
             break;

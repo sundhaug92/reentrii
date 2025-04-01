@@ -5,33 +5,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-GameModeExit gameover_screen(GameState *global_state)
+#include "orionmoon_png.h"
+
+GameModeExit victory_screen(GameState *global_state)
 {
-    GRRLIB_SetBackgroundColour(0x00, 0x00, 0x00, 0xFF);
+    GRRLIB_texImg *bg_tex = GRRLIB_LoadTexture(orionmoon_png);
 
     char message[40][80];
+    for (int line = 0; line < 40; line++)
+        snprintf(message[line], 80, " ");
 
     if ((*global_state).cheatsEnabled)
-        snprintf(message[0], 80, "Despite your best cheating,");
+        snprintf(message[0], 80, "With the help of your best cheating,");
     else
-        snprintf(message[0], 80, "Despite your best efforts,");
+        snprintf(message[0], 80, "With the help of your great skill,");
 
-    if ((*global_state).level == 1)
-    {
-        snprintf(message[1], 80, "you have failed to defeat the evil doctor.");
-        snprintf(message[2], 80, " ");
-    }
-    else
-    {
-        snprintf(message[1], 80, "despite fighting them across %d levels,", (*global_state).level - 1);
-        snprintf(message[2], 80, "you've failed to defeat the evil doctor.");
-    }
-
-    snprintf(message[3], 80, "Better luck next time.");
+    snprintf(message[1], 80, "you have defeated the evil doctor.");
 
     while (!(*global_state).exitRequested)
     {
-        GRRLIB_PrintfTTF(100, 50, (*global_state).basicFont, "GAME OVER", 32, 0x00FF00FF);
+        GRRLIB_DrawImg(0, 0, bg_tex, 0, 1, 1, RGBA(255, 255, 255, 255));
+        GRRLIB_PrintfTTF(100, 50, (*global_state).basicFont, "Victory!", 32, 0x00FF00FF);
 
         WPAD_ScanPads();
         u32 held = WPAD_ButtonsHeld(0);

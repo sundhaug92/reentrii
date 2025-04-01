@@ -41,6 +41,6 @@ extern GameModeExit game_screen(GameState* global_state);
 extern GameModeExit credits_screen();
 extern GameModeExit story_screen(GameState* global_state);
 extern GameModeExit gameover_screen(GameState* global_state);
-// extern GameModeExit victory_screen(GameState* global_state);
+extern GameModeExit victory_screen(GameState* global_state);
 
 #endif
