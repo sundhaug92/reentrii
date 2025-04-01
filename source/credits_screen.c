@@ -36,6 +36,15 @@ GameModeExit credits_screen(GameState *global_state)
 
         GRRLIB_SetBlend(0);
 
+        if(y <= -480)
+        {
+            GRRLIB_PrintfTTF(100, 200 + 0, (*global_state).basicFont, "Original pictures of Orion/Agena", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + 24, (*global_state).basicFont, "National Air and Space Administration", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + 48, (*global_state).basicFont, "European Space Agency", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + 96, (*global_state).basicFont, "Original pictures of aeroplanes and ASM-135 ASAT", 16, 0xFFFFFFFF);
+            GRRLIB_PrintfTTF(100, 200 + 120, (*global_state).basicFont, "United States Air Force", 16, 0xFFFFFFFF);
+        }
+
         y -= 1;
 
         WPAD_ScanPads();
