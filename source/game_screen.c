@@ -1,7 +1,6 @@
 #include "gamemanager.h"
 #include <grrlib.h>
 #include <wiiuse/wpad.h>
-#include "title_png.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
