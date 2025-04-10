@@ -26,7 +26,7 @@ If the game-manager sees an invalid screen being requested, it will switch to th
 Screen-transitions:
 
 ```mermaid
-graph screens;
+graph TD;
     splash-->credits;
     credits-->splash;
     splash-->game;
