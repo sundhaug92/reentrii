@@ -6,7 +6,8 @@
         "grrlib.h": "c",
         "grrlib__lib.h": "c",
         "random": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "wpad.h": "c"
     },
     "cmake.ignoreCMakeListsMissing": true
 }

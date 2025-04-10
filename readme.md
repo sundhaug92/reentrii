@@ -27,12 +27,18 @@ Screen-transitions:
 
 ```mermaid
 graph TD;
-    splash-->credits;
-    credits-->splash;
-    splash-->story;
-    story-->game;
-    game-->victory;
-    victory-->credits;
-    game-->gameover;
-    gameover-->credits;
+    "Splash screen"-->"Credits screen";
+    "Credits screen"-->"Splash screen";
+    "Splash screen"-->"Story screen";
+    "Story screen"-->"Game screen";
+    "Game screen"-->"Victory screen";
+    "Victory screen"-->"Credits screen";
+    "Game screen"-->"Game Over";
+    "Game Over screen"-->"Credits screen";
 ```
+
+## Funny little bits
+
+1. The doctor is named Lentokentta, which in Finnish means "airfield" and is the name of the district of Vantaa that houses Helsinki-Vantaa airport. This is a reference to Petri Wilhelmsen, developer of Reentry, being part Finnish, and inspired by [The Technical Difficulties](<https://www.youtube.com/watch?v=3UAOs9B9UH8>). The gender of the evil doctor is intentionally left ambigious.
+2. Entering the [Konami Code](<https://en.wikipedia.org/wiki/Konami_Code>) on the splash-screen works.
+3. Not only does cheating get called out by the splash-screen, but the victory and game-over screens will call you out for it.
