@@ -29,7 +29,8 @@ Screen-transitions:
 graph TD;
     splash-->credits;
     credits-->splash;
-    splash-->game;
+    splash-->story;
+    story-->game;
     game-->victory;
     victory-->credits;
     game-->gameover;
