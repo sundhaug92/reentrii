@@ -42,3 +42,4 @@ graph TD;
 1. The doctor is named Lentokentta, which in Finnish means "airfield" and is the name of the district of Vantaa that houses Helsinki-Vantaa airport. This is a reference to Petri Wilhelmsen, developer of Reentry, being part Finnish, and inspired by [The Technical Difficulties](<https://www.youtube.com/watch?v=3UAOs9B9UH8>). The gender of the evil doctor is intentionally left ambigious.
 2. Entering the [Konami Code](<https://en.wikipedia.org/wiki/Konami_Code>) on the splash-screen works.
 3. Not only does cheating get called out by the splash-screen, but the victory and game-over screens will call you out for it.
+4. Most of the graphics were added late at night, past midnight, only a few hours before the game was announced. Before then, the player texture was a white "C", the projectiles were -> and <- (depending on if they were friendly or not), and enemies were the letter "E" colored depending on their level.
