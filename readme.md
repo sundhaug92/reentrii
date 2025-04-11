@@ -27,14 +27,20 @@ Screen-transitions:
 
 ```mermaid
 graph TD;
-    "Splash screen"-->"Credits screen";
-    "Credits screen"-->"Splash screen";
-    "Splash screen"-->"Story screen";
-    "Story screen"-->"Game screen";
-    "Game screen"-->"Victory screen";
-    "Victory screen"-->"Credits screen";
-    "Game screen"-->"Game Over";
-    "Game Over screen"-->"Credits screen";
+    splash["Splash screen"];
+    credits["Credits screen"];
+    splash-->credits;
+    credits-->splash;
+    splash-->story;
+    story["Story screen"];
+    game["Game screen"];
+    story-->game;
+    victory["Victory screen"];
+    game-->victory;
+    victory-->credits;
+    gameover["Game over screen"];
+    game-->gameover;
+    gameover-->credits;
 ```
 
 ## Funny little bits
