@@ -23,9 +23,11 @@ Each screen has a screens ID, and a function that takes a reference to the globa
 The GameModeExit struct tells the game-manager which screen it should switch to next unless the game shutdown callbacks have been called.
 If the game-manager sees an invalid screen being requested, it will switch to the error-screen and display an error-message.
 
-Screen-transitions:
-
 ```mermaid
+---
+title: Screen-transitions
+---
+
 graph TD;
     splash["Splash screen"];
     credits["Credits screen"];
